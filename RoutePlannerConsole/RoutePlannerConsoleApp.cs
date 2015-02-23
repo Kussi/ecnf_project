@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib;
+using System.IO;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
 {
@@ -19,6 +20,18 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             var bern = new WayPoint("Bern", 46.9546699, 7.39487);
             var tripolis = new WayPoint("Tripolis", 32.8255927, 13.1133419);
             //Console.WriteLine("{0}: {1}/{2}", wayPoint.Name, wayPoint.Latitude, wayPoint.Longitude);
+
+            Cities cs = new Cities();
+            City c1 = new City("Möhlin", "CH", 10, 10.1, 11.12);
+
+            Console.WriteLine(Directory.GetCurrentDirectory());
+            Console.WriteLine(cs.ReadCities("citiesTestDataLab2.txt"));
+
+            Console.WriteLine(cs.Count);
+
+
+            Console.WriteLine();
+
 
             Console.WriteLine(tripolis.Distance(bern));
 
