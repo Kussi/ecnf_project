@@ -37,7 +37,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             {
                 reader = new StreamReader(filename);
             } 
-            catch(FileNotFoundException e)
+            catch(FileNotFoundException)
             {
                 return -1;
             }
@@ -76,5 +76,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
             return neighbours;
         }
+
+
+        public City FindCity(string cityName)
+        {
+            return cities.Find(c => c.Name.Equals(cityName.Trim()));
+        } 
     }
 }
