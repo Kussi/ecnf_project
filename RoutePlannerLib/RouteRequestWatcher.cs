@@ -8,31 +8,31 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class RouteRequestWatcher
     {
-        Dictionary<string, int> counter;
+        Dictionary<string, int> cityCounter;
 
         public RouteRequestWatcher()
         {
-            counter = new Dictionary<string, int>();
+            cityCounter = new Dictionary<string, int>();
         }
 
         public void LogRouteRequests(object sender, RouteRequestEventArgs e)
         {
 
-            try 
+            if (cityCounter.ContainsKey(e.ToCity))
             {
-                counter[e.ToCity]++;
+                cityCounter[e.ToCity] += 1;
             }
-            catch
+            else
             {
-                counter[e.ToCity] = 1;
+                cityCounter.Add(e.ToCity, 1);
             }
 
             Console.WriteLine("Current Request State");
             Console.WriteLine("---------------------");
 
-            foreach (var pair in counter)
+            foreach (var pair in cityCounter)
             {
-                Console.WriteLine("ToCity: " + pair.Key + " has been requested " + pair.Value + " times");
+                Console.WriteLine("ToCity: {0} has been requested {1} times", pair.Key, pair.Value);
             }
 
             Console.WriteLine();
@@ -41,7 +41,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int GetCityRequests(string cityName)
         {
-            return counter[cityName];
+            if (cityCounter.ContainsKey(cityName))
+            {
+                return cityCounter[cityName];
+            }
+            return 0;
         }
 
 

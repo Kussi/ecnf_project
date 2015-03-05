@@ -39,7 +39,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             } 
             catch(FileNotFoundException)
             {
-                return -1;
+                throw;
             }
 
             string line;
@@ -50,7 +50,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                 line = line.Replace('.', ',');
 
                 string[] splits = line.Split('\t');
-                City city = new City(splits[0], splits[1], Convert.ToInt32(splits[2]), Convert.ToDouble(splits[3]), Convert.ToDouble(splits[4]));
+                City city = new City(   splits[0], 
+                                        splits[1], 
+                                        Convert.ToInt32(splits[2]), 
+                                        Convert.ToDouble(splits[3]), 
+                                        Convert.ToDouble(splits[4]));
 
 
                 this[this.cities.Count] = city;
@@ -80,7 +84,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public City FindCity(string cityName)
         {
-            return cities.Find(c => c.Name.Equals(cityName.Trim()));
-        } 
+            return Array.Find(cities.ToArray(), delegate(City city)
+            {
+                return String.Compare(city.Name, cityName, true) == 0;
+            });
+        }
     }
 }
