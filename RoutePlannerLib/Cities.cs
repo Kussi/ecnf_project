@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
@@ -27,6 +28,29 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             }
             set { this.cities.Insert(index, value); }
         }
+
+
+        public int ReadCities(string filename)
+        {
+            int count = 0;
+            using (TextReader reader = new StreamReader(filename))
+            {
+                IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
+
+                foreach(string[] line in citiesAsStrings)
+                {
+                    cities.Add(new City(line[0].Trim(), 
+                        line[1].Trim(), 
+                        int.Parse(line[2]),
+                        double.Parse(line[3].Replace('.', ',')),
+                        double.Parse(line[4].Replace('.', ','))));
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        /*
 
         public int ReadCities(string filename)
         {
@@ -62,7 +86,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             }
 
             return count;
-        }
+        }*/
 
         public List<City> FindNeighbours(WayPoint location, double distance)
         {
@@ -88,6 +112,37 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             {
                 return String.Compare(city.Name, cityName, true) == 0;
             });
+        }
+
+        /// <summary>
+        /// Find all cities between 2 cities 
+        /// </summary>
+        /// <param name="from">source city</param>
+        /// <param name="to">target city</param>
+        /// <returns>list of cities</returns>
+        public List<City> FindCitiesBetween(string fromCity, string toCity)
+        {
+            var foundCities = new List<City>();
+            var from = FindCity(fromCity);
+            var to = FindCity(toCity);
+            
+            if (from == null || to == null)
+                return foundCities;
+
+            foundCities.Add(from);
+
+            var minLat = Math.Min(from.Location.Latitude, to.Location.Latitude);
+            var maxLat = Math.Max(from.Location.Latitude, to.Location.Latitude);
+            var minLon = Math.Min(from.Location.Longitude, to.Location.Longitude);
+            var maxLon = Math.Max(from.Location.Longitude, to.Location.Longitude);
+
+            // rename the name of the "cities" variable to your name of the internal City-List
+            foundCities.AddRange(cities.FindAll(c =>
+                c.Location.Latitude > minLat && c.Location.Latitude < maxLat
+                        && c.Location.Longitude > minLon && c.Location.Longitude < maxLon));
+
+            foundCities.Add(to);
+            return foundCities;
         }
     }
 }
