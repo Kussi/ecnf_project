@@ -30,6 +30,9 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             Console.WriteLine("distance between tripolis and bern:");
             Console.WriteLine(tripolis.Distance(bern));
 
+            Console.WriteLine();
+            Console.WriteLine(wayPoint.ToString());
+
             Console.ReadLine();
         }
     }

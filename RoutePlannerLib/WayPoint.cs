@@ -21,12 +21,15 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public override string ToString()
         {
+            string lat, lon;
             string s = "WayPoint: ";
             if (Name != null && Name != "")
             {
                 s += Name + " ";
             }
-            s += Math.Round(Latitude, 2) + "/" + Math.Round(Longitude, 2);
+            lat = string.Format("{0:.00}", Latitude);
+            lon = string.Format("{0:.00}", Longitude);
+            s += lat + "/" + lon;
             return s;
         }
 

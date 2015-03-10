@@ -7,8 +7,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class RouteRequestEventArgs : System.EventArgs
     {
-        public string FromCity { get; set; }
-        public string ToCity { get; set; }
+        public string FromCity { get; private set; }
+        public string ToCity { get; private set; }
         public TransportModes Transportmodus;
 
         public RouteRequestEventArgs(string _fromCity, string _toCity, TransportModes _Transportmodus)
