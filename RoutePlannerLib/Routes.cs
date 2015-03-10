@@ -95,11 +95,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             
         }
 
-        private List<Link> FindPath(List<City> citiesOnRoute, TransportModes mode)
-        {
-            throw new NotImplementedException();
-        }
-
         private static List<City> FillListOfNodes(List<City> cities, out Dictionary<City, double> dist, out Dictionary<City, City> previous)
         {
             var q = new List<City>(); // the set of all nodes (cities) in Graph ;
@@ -164,12 +159,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             return previous;
         }
 
-        private Link FindLink(City u, City n, TransportModes mode)
-        {
-            throw new NotImplementedException();
-        }
-
-
         /// <summary>
         /// Finds all neighbor cities of a city. 
         /// </summary>
@@ -204,6 +193,23 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
             citiesOnRoute.Reverse();
             return citiesOnRoute;
+        }
+
+        private List<Link> FindPath(List<City> citiesOnRoute, TransportModes mode)
+        {
+            var linkedRoute = new List<Link>();
+            for (int i = 0; i < citiesOnRoute.Count - 1; i++)
+            {
+                var distanceBetween = citiesOnRoute[i].Location.Distance(citiesOnRoute[i + 1].Location);
+                linkedRoute.Add(new Link(citiesOnRoute[i], citiesOnRoute[i + 1], distanceBetween, mode));
+            }
+
+            return linkedRoute;
+        }
+
+        private Link FindLink(City fromCity, City toCity, TransportModes mode)
+        {
+            return new Link(fromCity, toCity, fromCity.Location.Distance(toCity.Location), mode);
         }
     }
 }
