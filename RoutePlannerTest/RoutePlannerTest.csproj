@@ -6,7 +6,7 @@
     <ProjectGuid>{3FEB5E5E-6CB2-4DF7-B390-8C5B7814B9A7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RoutePlannerTest</RootNamespace>
+    <RootNamespace>Fhnw.Ecnf.RoutePlanner.RoutePlannerTest</RootNamespace>
     <AssemblyName>RoutePlannerTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,6 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Lab5SerializerTest.cs" />
+    <Compile Include="Lab5Test.cs" />
     <Compile Include="Lab2Test.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
