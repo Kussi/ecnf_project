@@ -50,13 +50,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Lab5SerializerTest.cs" />
-    <Compile Include="Lab5Test.cs" />
+    <Compile Include="Lab5SerializerTest.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Lab5Test.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Lab2Test.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
-    <Compile Include="Lab3Test.cs" />
-    <Compile Include="Lab4Test.cs" />
+    <Compile Include="Lab3Test.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="Lab4Test.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
