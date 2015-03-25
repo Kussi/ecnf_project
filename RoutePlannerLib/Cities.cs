@@ -91,8 +91,12 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public List<City> FindNeighbours(WayPoint location, double distance)
         {
-            List<City> neighbours = new List<City>();
+            var neighbours = this.cities.Where(n => n.Location.Distance(location) <= distance).ToList();
 
+            /*
+            //old implementation
+            List<City> neighbours = new List<City>();
+            
             foreach(City city in this.cities)
             {
                
@@ -101,7 +105,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                     neighbours.Add(city);
                 }
                 
-            }
+            }*/
 
             return neighbours;
         }
@@ -109,11 +113,16 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public City FindCity(string cityName)
         {
+            return Array.Find(cities.ToArray(), p => String.Compare(p.Name, cityName, true) == 0);
+        }
+
+        /*public City FindCity(string cityName)
+        {
             return Array.Find(cities.ToArray(), delegate(City city)
             {
                 return String.Compare(city.Name, cityName, true) == 0;
             });
-        }
+        }*/
 
         /// <summary>
         /// Find all cities between 2 cities 
