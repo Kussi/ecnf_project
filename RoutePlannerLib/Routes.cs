@@ -211,5 +211,13 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             return new Link(fromCity, toCity, fromCity.Location.Distance(toCity.Location), mode);
         }
+
+        public City[] FindCities(TransportModes transportMode)
+        {
+            return routes.Where(r1 => r1.TransportMode == transportMode)
+                         .SelectMany(r2 => new[] { r2.FromCity, r2.ToCity })
+                         .Distinct()
+                         .ToArray();
+        }
     }
 }
