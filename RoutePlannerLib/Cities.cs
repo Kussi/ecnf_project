@@ -33,14 +33,31 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int ReadCities(string filename)
         {
+            using (TextReader reader = new StreamReader(filename))
+            {
+                IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
+                IEnumerable<City> c = citiesAsStrings.Select(line => new City(line[0].Trim(), 
+                                                                            line[1].Trim(),
+                                                                            int.Parse(line[2], CultureInfo.InvariantCulture),
+                                                                            double.Parse(line[3], CultureInfo.InvariantCulture), 
+                                                                            double.Parse(line[4], CultureInfo.InvariantCulture)))
+                                                                        .ToList();
+                cities.AddRange(c);
+                return c.Count();
+            }
+
+            /*
+            // old version lab 4
+            
             int count = 0;
+            
             using (TextReader reader = new StreamReader(filename))
             {
                 IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
 
-                foreach(string[] line in citiesAsStrings)
+                foreach (string[] line in citiesAsStrings)
                 {
-                    cities.Add(new City(line[0].Trim(), 
+                    cities.Add(new City(line[0].Trim(),
                         line[1].Trim(),
                         int.Parse(line[2], CultureInfo.InvariantCulture),
                         double.Parse(line[3], CultureInfo.InvariantCulture),
@@ -49,45 +66,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                 }
             }
             return count;
+             */
         }
-
-        /*
-
-        public int ReadCities(string filename)
-        {
-            int count = 0;
-            TextReader reader;
-
-            try
-            {
-                reader = new StreamReader(filename);
-            } 
-            catch(FileNotFoundException)
-            {
-                throw;
-            }
-
-            string line;
-
-
-            while((line = reader.ReadLine()) != null)
-            {
-                line = line.Replace('.', ',');
-
-                string[] splits = line.Split('\t');
-                City city = new City(   splits[0], 
-                                        splits[1], 
-                                        Convert.ToInt32(splits[2]), 
-                                        Convert.ToDouble(splits[3]), 
-                                        Convert.ToDouble(splits[4]));
-
-
-                this[this.cities.Count] = city;
-                count++;
-            }
-
-            return count;
-        }*/
 
         public List<City> FindNeighbours(WayPoint location, double distance)
         {
