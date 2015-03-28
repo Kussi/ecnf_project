@@ -184,6 +184,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             var citiesOnRoute = new List<City>();
             var cr = target;
+
             while (previous[cr] != null)
             {
                 citiesOnRoute.Add(cr);

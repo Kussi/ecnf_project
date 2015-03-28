@@ -20,35 +20,35 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
         public object Next()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var readLine = stream.ReadLine();
-            if (readLine == null)
+            var ass = Assembly.GetExecutingAssembly();
+            string line = stream.ReadLine();
+            if (line == null)
                 return null;
 
-            var obj = assembly.CreateInstance(readLine.Split(' ')[2]);
+            var obj = ass.CreateInstance(line.Split(' ')[2]);
             if (obj == null)
                 return null;
 
             var type = obj.GetType();
-            while ((readLine = stream.ReadLine()) != null && !readLine.Equals("End of instance"))
+            while ((line = stream.ReadLine()) != null && !line.Equals("End of instance"))
             {
-                if (readLine.EndsWith("is a nested object..."))
+                if (line.EndsWith("is a nested object..."))
                 {
-                    type.GetProperty(readLine.Split(' ')[0]).SetValue(obj, Next());
+                    type.GetProperty(line.Split(' ')[0]).SetValue(obj, Next());
                 }
                 else
                 {
-                    var propertyValues = readLine.Split('=');
-                    var property = type.GetProperty(propertyValues[0]);
-                    if (property.PropertyType != typeof(String))
+                    string[] propVals = line.Split('=');
+                    var prop = type.GetProperty(propVals[0]);
+                    if (prop.PropertyType != typeof(String))
                     {
-                        var invoker = Activator.CreateInstance(property.PropertyType);
-                        var parser = property.PropertyType.GetMethod("Parse", new[] { typeof(String), typeof(CultureInfo) });
-                        property.SetValue(obj, parser.Invoke(invoker, new object[] { propertyValues[1], CultureInfo.InvariantCulture }));
+                        var inv = Activator.CreateInstance(prop.PropertyType);
+                        var pars = prop.PropertyType.GetMethod("Parse", new[] { typeof(String), typeof(CultureInfo) });
+                        prop.SetValue(obj, pars.Invoke(inv, new object[] { propVals[1], CultureInfo.InvariantCulture }));
                     }
                     else
                     {
-                        property.SetValue(obj, propertyValues[1].Replace("\"", ""));
+                        prop.SetValue(obj, propVals[1].Replace("\"", ""));
                     }
                 }
             }

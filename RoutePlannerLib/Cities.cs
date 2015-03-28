@@ -72,7 +72,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         public List<City> FindNeighbours(WayPoint location, double distance)
         {
             var neighbours = this.cities.Where(n => n.Location.Distance(location) <= distance).ToList();
-
             /*
             //old implementation
             List<City> neighbours = new List<City>();

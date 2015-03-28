@@ -21,25 +21,25 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
         {
             var type = obj.GetType();
             stream.WriteLine("Instance of {0}", type.FullName);
-            var properties = type.GetProperties();
-            foreach (var property in properties)
+            var props = type.GetProperties();
+            foreach (var prop in props)
             {
-                if (property.PropertyType.FullName.StartsWith("Fhnw.Ecnf.RoutePlanner."))
+                if (prop.PropertyType.FullName.StartsWith("Fhnw.Ecnf.RoutePlanner."))
                 {
-                    stream.WriteLine("{0} is a nested object...", property.Name);
-                    Next(property.GetValue(obj));
+                    stream.WriteLine("{0} is a nested object...", prop.Name);
+                    Next(prop.GetValue(obj));
                 }
                 else
                 {
                     //ignore Index Property (from City class)
-                    if (property.Name == "Index") continue;
+                    if (prop.Name == "Index") continue;
 
-                    if (property.GetValue(obj) is double)
-                        stream.WriteLine("{0}={1}", property.Name, ((double)property.GetValue(obj)).ToString(CultureInfo.InvariantCulture));
-                    else if (property.GetValue(obj) is string)
-                        stream.WriteLine("{0}=\"{1}\"", property.Name, property.GetValue(obj).ToString());
+                    if (prop.GetValue(obj) is double)
+                        stream.WriteLine("{0}={1}", prop.Name, ((double)prop.GetValue(obj)).ToString(CultureInfo.InvariantCulture));
+                    else if (prop.GetValue(obj) is string)
+                        stream.WriteLine("{0}=\"{1}\"", prop.Name, prop.GetValue(obj).ToString());
                     else
-                        stream.WriteLine("{0}={1}", property.Name, property.GetValue(obj).ToString());
+                        stream.WriteLine("{0}={1}", prop.Name, prop.GetValue(obj).ToString());
                 }
             }
             stream.WriteLine("End of instance");
