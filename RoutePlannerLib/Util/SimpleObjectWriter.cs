@@ -19,30 +19,34 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
 
         public void Next(object obj)
         {
-            var type = obj.GetType();
-            stream.WriteLine("Instance of {0}", type.FullName);
-            var props = type.GetProperties();
-            foreach (var prop in props)
+            if (stream == null) { }
+            else if (obj == null) { }
+            else 
             {
-                if (prop.PropertyType.FullName.StartsWith("Fhnw.Ecnf.RoutePlanner."))
+                stream.Write("Instance of {0}\r\n", obj.GetType().FullName);
+                var properties = obj.GetType().GetProperties();
+                foreach (var prop in properties)
                 {
-                    stream.WriteLine("{0} is a nested object...", prop.Name);
-                    Next(prop.GetValue(obj));
-                }
-                else
-                {
-                    //ignore Index Property (from City class)
-                    if (prop.Name == "Index") continue;
+                    var value = prop.GetValue(obj);
+                    var valueString = value as string;
+                    var valueValType = value as ValueType;
 
-                    if (prop.GetValue(obj) is double)
-                        stream.WriteLine("{0}={1}", prop.Name, ((double)prop.GetValue(obj)).ToString(CultureInfo.InvariantCulture));
-                    else if (prop.GetValue(obj) is string)
-                        stream.WriteLine("{0}=\"{1}\"", prop.Name, prop.GetValue(obj).ToString());
+                    if (valueString != null)
+                    {
+                        stream.Write("{0}=\"{1}\"\r\n", prop.Name, value);
+                    }
+                    else if (valueValType != null)
+                    {
+                        stream.Write("{0}={1}\r\n", prop.Name, Convert.ToString(value, CultureInfo.InvariantCulture.NumberFormat));
+                    }
                     else
-                        stream.WriteLine("{0}={1}", prop.Name, prop.GetValue(obj).ToString());
+                    {
+                        stream.Write("{0} is a nested object...\r\n", prop.Name);
+                        this.Next(value);
+                    }
                 }
+                stream.Write("End of instance\r\n");
             }
-            stream.WriteLine("End of instance");
         }
     }
 }

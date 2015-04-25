@@ -35,8 +35,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         {
             using (TextReader reader = new StreamReader(filename))
             {
-                IEnumerable<string[]> citiesAsStrings = reader.GetSplittedLines('\t');
-                IEnumerable<City> c = citiesAsStrings.Select(line => new City(line[0].Trim(), 
+                IEnumerable<City> c = reader.GetSplittedLines('\t').Select(line => new City(line[0].Trim(), 
                                                                             line[1].Trim(),
                                                                             int.Parse(line[2], CultureInfo.InvariantCulture),
                                                                             double.Parse(line[3], CultureInfo.InvariantCulture), 
@@ -92,7 +91,15 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public City FindCity(string cityName)
         {
-            return Array.Find(cities.ToArray(), p => String.Compare(p.Name, cityName, true) == 0);
+            try
+            {
+                var res = cities.Where(p => String.Compare(p.Name, cityName, true) == 0).Single();
+                if (res != null) return res;
+            }
+            catch (Exception) { }
+            return default(City);
+
+            //return Array.Find(cities.ToArray(), p => String.Compare(p.Name, cityName, true) == 0);
         }
 
         /*public City FindCity(string cityName)

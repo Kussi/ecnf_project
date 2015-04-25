@@ -11,11 +11,13 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
     {
         public static IEnumerable<string[]> GetSplittedLines(this TextReader reader, char separator)
         {
-            string[] lines = reader.ReadToEnd().Split('\n');
-
-            foreach (string line in lines)
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                yield return line.Split(separator);
+                foreach (string part in line.Split('\n'))
+                {
+                    yield return part.Split(separator);
+                }
             }
         }
     }
