@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
     public class Cities
     {
+        private static TraceSource citiesLogger;
+
         public List<City> cities;
 
         public int Count 
@@ -18,7 +21,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
             get { return cities.Count; }
         }
 
-        public Cities() { cities = new List<City>(); }
+        public Cities() { 
+            citiesLogger = new TraceSource("citiesLogger");
+            cities = new List<City>(); 
+        }
 
         public City this[int index]
         {
@@ -33,8 +39,11 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public int ReadCities(string filename)
         {
-            using (TextReader reader = new StreamReader(filename))
-            {
+            citiesLogger.TraceInformation("Read Cities started");
+            try {
+                TextReader reader = new StreamReader(filename);
+                
+
                 IEnumerable<City> c = reader.GetSplittedLines('\t').Select(line => new City(line[0].Trim(), 
                                                                             line[1].Trim(),
                                                                             int.Parse(line[2], CultureInfo.InvariantCulture),
@@ -42,8 +51,15 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                                                                             double.Parse(line[4], CultureInfo.InvariantCulture)))
                                                                         .ToList();
                 cities.AddRange(c);
+
+                citiesLogger.TraceInformation("Read Cities ended");
                 return c.Count();
             }
+            catch (FileNotFoundException e)
+            {
+                citiesLogger.TraceEvent(TraceEventType.Critical, 0, e.StackTrace);
+            }
+            return 0;
 
             /*
             // old version lab 4

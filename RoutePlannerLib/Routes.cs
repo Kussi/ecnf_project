@@ -4,6 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Threading;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 {
@@ -14,6 +15,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
     public class Routes : IRoutes
     {
+        private static TraceSource routesLogger;
         List<Link> routes = new List<Link>();
         Cities cities;
 
@@ -31,6 +33,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         /// <param name="cities"></param>
         public Routes(Cities cities)
         {
+            routesLogger = new TraceSource("routesLogger");
             this.cities = cities;
         }
 
@@ -42,6 +45,8 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
         /// <returns>number of read route</returns>
         public int ReadRoutes(string filename)
         {
+            routesLogger.TraceInformation("Read Routes started");
+
             using (TextReader reader = new StreamReader(filename))
             {
                 string line;
@@ -61,6 +66,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                 }
             }
 
+            routesLogger.TraceInformation("Read Routes ended");
             return Count;
 
         }
