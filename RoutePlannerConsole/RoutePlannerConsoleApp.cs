@@ -9,11 +9,16 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Runtime;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
 {
     class RoutePlannerConsoleApp
     {
+
+        private static Stopwatch stopWatch = new Stopwatch();
+        private static int counter = 0;
+
         static void Main(string[] args)
         {
             // version
@@ -52,35 +57,45 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             Console.WriteLine("----------------------------------------");
             Console.WriteLine();
 
-            Console.WriteLine("Speicher:");
-            int hundredOfMBs = 10;
-            int[][] buf = new int[hundredOfMBs][];
-            for(int i = 0; i < buf.Length; ++i)
+            
+            // Garbage Collection
+            Console.WriteLine("Garbage Collection test");
+            Console.WriteLine("=========================================");
+            Console.WriteLine("Cleaning times with gcConcurrent enabled or disabled");
+            Console.WriteLine("(has to be modified in the App.config manually)");
+            for (int i = 0; i < 10; ++i)
             {
-                buf[i] = new int[25 * 1024 * 1024]; // 
-                for(int j = 0; j < buf[i].Length; ++j)
-                {
-                    buf[i][j] = (int)i;
-                }
+                createGarbage(1);
+                removeGarbage();
             }
 
-            Console.WriteLine(Marshal.SizeOf(buf));
 
-            // Garbage Collection
-            Stopwatch stopWatch = new Stopwatch();
+            // Erläuterung:
+            // Mittels der Methode createGarbage erzeugen wir Daten, welche wir anschliessend
+            // mit der removeGarbage-Methode wieder null setzen und mittels GC aufräumen. Die
+            // Dauer, welche das Aufräumen in Anspruch nimmt, messen wir mit einer Stopwatch.
+            // Dabei haben wir zwei Arten von Garbage Collectoren getestet: Concurrent
+            // Collection enabled und disabled. (Muss im App.Config manuell angepasst werden)
 
-            stopWatch.Start();
-            GC1();
-            stopWatch.Stop();
-            Console.WriteLine("RunTime of GC1: " + FormatTime(stopWatch));
-            stopWatch.Reset();
+            // Ergebnis
+            //          enabled = true      enabled = false
+            // 1.       5.04s               5.91s
+            // 2.       4.99s               5.87s
+            // 3.       5.17s               5.92s
+            // 4.       5.42s               6.49s
+            // 5.       4.82s               5.53s
+            // 6.       4.98s               6.08s
+            // 7.       5.27s               5.80s
+            // 8.       5.01s               5.86s
+            // 9.       5.11s               5.98s
+            //10.       5.16s               6.25s
+            // ---------------------------------------------
+            // Schnitt: 5.097s              5.969s
+            // =============================================
 
-            stopWatch.Start();
-            GC2();
-            stopWatch.Stop();
-            Console.WriteLine("RunTime of GC2 " + FormatTime(stopWatch));
+            // Damit ist in unserem Fall die Concurrent Collection (enabled) um ca 17% schneller
 
-            Console.ReadLine();
+                Console.ReadLine();
         }
 
         public static string FormatTime(Stopwatch watch)
@@ -92,17 +107,37 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             return elapsedTime;
         }
 
-        public static void GC1() 
+        // generiert 100 * <numberOfHundredMBs> MegaByte Speicher in Form eines int[][]
+        public static int[][] createGarbage(int numberOfHundredMBs)
         {
-
-            GC.Collect();
+            int[][] buf = new int[25 * 1024 * 1024 / 2][]; // 32B (int) * 25 * 1024 * 1024 = 100MB
+            for (int i = 0; i < buf.Length; ++i)
+            {
+                buf[i] = new int[numberOfHundredMBs * 2]; // *2 und /2 für die bessere Verteilung
+                for (int j = 0; j < buf[i].Length; ++j)
+                {
+                    buf[i][j] = (int)i;
+                }
+            }
+            return buf;
         }
 
-        public static void GC2()
+        public static void removeGarbage() 
         {
+            stopWatch.Start();
 
-            //StreamReader sr = new StreamReader("bla");
-            //sr.Dispose();
+            int[][] array = createGarbage(5);
+            for (int i = 0; i < array.Length; ++i)
+            {
+                array[i] = null;
+            }
+            array = null;
+            GC.Collect();
+
+            stopWatch.Stop();
+           
+            Console.WriteLine("{0}. {1}", ++counter, FormatTime(stopWatch));
+            stopWatch.Reset();
         }
     }
 }
