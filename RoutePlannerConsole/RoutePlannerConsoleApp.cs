@@ -8,6 +8,7 @@ using Fhnw.Ecnf.RoutePlanner.RoutePlannerLib;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
 {
@@ -51,6 +52,19 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             Console.WriteLine("----------------------------------------");
             Console.WriteLine();
 
+            Console.WriteLine("Speicher:");
+            int hundredOfMBs = 10;
+            int[][] buf = new int[hundredOfMBs][];
+            for(int i = 0; i < buf.Length; ++i)
+            {
+                buf[i] = new int[25 * 1024 * 1024]; // 
+                for(int j = 0; j < buf[i].Length; ++j)
+                {
+                    buf[i][j] = (int)i;
+                }
+            }
+
+            Console.WriteLine(Marshal.SizeOf(buf));
 
             // Garbage Collection
             Stopwatch stopWatch = new Stopwatch();
