@@ -154,6 +154,16 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                         && c.Location.Longitude > minLon && c.Location.Longitude < maxLon));
 
             foundCities.Add(to);
+
+            return InitIndexForAlgorithm(foundCities);
+        }
+
+        private List<City> InitIndexForAlgorithm(List<City> foundCities)
+        {
+            // set index for FloydWarshall 
+            for (var index = 0; index < foundCities.Count; index++)
+                foundCities[index].Index = index;
+
             return foundCities;
         }
     }

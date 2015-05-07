@@ -39,7 +39,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                     {
                         stream.Write("{0}={1}\r\n", prop.Name, Convert.ToString(value, CultureInfo.InvariantCulture.NumberFormat));
                     }
-                    else
+                    else if(prop.Name != "Index")
                     {
                         stream.Write("{0} is a nested object...\r\n", prop.Name);
                         this.Next(value);
