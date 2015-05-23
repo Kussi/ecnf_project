@@ -49,7 +49,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerConsole
             Console.WriteLine("Logger-Test");
             Console.WriteLine("=========================================");
             Cities cs = new Cities();
-            Routes rs = new Routes(cs);
+            Routes rs = new RoutesDijkstra(cs);
             cs.ReadCities("citiesTestDataLab2.txt");
             rs.ReadRoutes("linksTestDataLab3.txt");
             cs.ReadCities("exception");

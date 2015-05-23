@@ -30,7 +30,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                     var value = prop.GetValue(obj);
                     var valueString = value as string;
                     var valueValType = value as ValueType;
-
+                    if (prop.Name == "Index") continue;
                     if (valueString != null)
                     {
                         stream.Write("{0}=\"{1}\"\r\n", prop.Name, value);
@@ -39,8 +39,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib.Util
                     {
                         stream.Write("{0}={1}\r\n", prop.Name, Convert.ToString(value, CultureInfo.InvariantCulture.NumberFormat));
                     }
-                    else if(prop.Name != "Index")
-                    {
+                    else {
                         stream.Write("{0} is a nested object...\r\n", prop.Name);
                         this.Next(value);
                     }

@@ -57,6 +57,7 @@
     <Compile Include="RouteRequestEventArgs.cs" />
     <Compile Include="RouteRequestWatcher.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="RoutesDijkstra.cs" />
     <Compile Include="RoutesFactory.cs" />
     <Compile Include="Util\SimpleObjectReader.cs" />
     <Compile Include="Util\SimpleObjectWriter.cs" />
