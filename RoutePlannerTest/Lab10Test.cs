@@ -12,10 +12,10 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 	[DeploymentItem("data/citiesTestDataLab4.txt")]
 	[DeploymentItem("data/citiesTestDataLab10.txt")]
 	[DeploymentItem("data/linksTestDataLab10.txt")]
-	public class Lab10Test
+	public class Lab11Test
 	{
 		private const string CitiesTestFile = "citiesTestDataLab2.txt";
-        
+
 		[TestMethod]
 		public void TestCorrectIndexingOfCities()
 		{
@@ -37,7 +37,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 			}
 	
 		}
-        
+
 		[TestMethod]
 		public void TestTask1FindRoutes()
 		{
@@ -110,7 +110,7 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 		public void TestTask3CompareAlgorithms()
 		{
 			//IGNORE THIS TEST - ITS UNRELIABLE
-			
+			/*
 			Cities cities = new Cities();
 
 			cities.ReadCities(@"citiesTestDataLab10.txt");
@@ -125,9 +125,9 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerTest
 
 			// the sequential version should be slower
 			Assert.IsTrue(floydWarshallTime > dijkstraTime, "FloydWarshal should be slower");
-			
+			*/
 		}
-        
+
 		private long FindRoutes(Routes routes)
 		{
 			routes.ReadRoutes(@"linksTestDataLab10.txt");
