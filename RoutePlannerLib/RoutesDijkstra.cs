@@ -39,7 +39,6 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
             // prepare final list if links
             return FindPath(citiesOnRoute, mode);
-
         }
 
         private static List<City> FillListOfNodes(List<City> cities, out Dictionary<City, double> dist, out Dictionary<City, City> previous)
@@ -166,6 +165,65 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
                          .SelectMany(r2 => new[] { r2.FromCity, r2.ToCity })
                          .Distinct()
                          .ToArray();
+        }
+
+        //public Task<List<Link>> GoFindShortestRouteBetween(String fromCity, String toCity, TransportModes mode)
+        public Task<List<Link>> FindShortestRouteBetweenAsync(String fromCity, String toCity, TransportModes mode)
+        {
+            return FindShortestRouteBetweenAsync(fromCity, toCity, mode, null);
+        }
+
+        public async Task<List<Link>> FindShortestRouteBetweenAsync(String fromCity, String toCity, 
+            TransportModes mode, IProgress<String> state)
+        {
+            if (state != null)
+            {
+                state.Report("entering method: done");
+            } 
+            if (RouteRequestEvent != null)
+            {
+                RouteRequestEvent(this, new RouteRequestEventArgs(fromCity, toCity, mode));
+            }
+            if (state != null)
+            {
+                state.Report("calling RouteRequestEvent: done");
+            }
+            var citiesBetween = cities.FindCitiesBetween(fromCity, toCity);
+            if (citiesBetween == null || citiesBetween.Count < 1 || routes == null || routes.Count < 1)
+                return null;
+            if (state != null)
+            {
+                state.Report("checking passing points: done");
+            }
+
+            var source = citiesBetween[0];
+            var target = citiesBetween[citiesBetween.Count - 1];
+            if (state != null)
+            {
+                state.Report("setting source and target: done");
+            }
+
+            Dictionary<City, double> dist;
+            Dictionary<City, City> previous;
+            var q = FillListOfNodes(citiesBetween, out dist, out previous);
+            dist[source] = 0.0;
+
+            // the actual algorithm
+            previous = SearchShortestPath(mode, q, dist, previous);
+            if (state != null)
+            {
+                state.Report("running actual algorithm: done");
+            }
+
+            // create a list with all cities on the route
+            var citiesOnRoute = GetCitiesOnRoute(source, target, previous);
+            if (state != null)
+            {
+                state.Report("leaving Method: almost done");
+            }
+
+            // prepare final list if links
+            return FindPath(citiesOnRoute, mode);
         }
     }
 }
