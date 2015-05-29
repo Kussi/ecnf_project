@@ -12,8 +12,14 @@ namespace Fhnw.Ecnf.RoutePlanner.RoutePlannerLib
 
         public RoutesDijkstra(Cities cities) : base(cities) { }
 
-        public override List<Link> FindShortestRouteBetween(string fromCity, string toCity,
-                                        TransportModes mode)
+        public override List<Link> FindShortestRouteBetween(String fromCity, String toCity,
+            TransportModes mode)
+        {
+            return FindShortestRouteBetween(fromCity, toCity, mode, null);
+        }
+
+        public List<Link> FindShortestRouteBetween(string fromCity, string toCity,
+                                        TransportModes mode, IProgress<String> state)
         {
             if (RouteRequestEvent != null)
             {
